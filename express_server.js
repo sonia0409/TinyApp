@@ -21,10 +21,15 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n")
 });
 
-app.get("/urls",(req, res) => {
-  const templateVars = {urls: urlDatabase};
-  res.render("url_index",templateVars);
-})
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
+});
+
+app.get("/urls/:shortURL", (req, res) => {
+  const templateVars = {shortURL: req.params.shortURL, longURL: 'What goes here?' };
+  res.render("urls_show", templateVars);
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
