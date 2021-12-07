@@ -7,7 +7,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 function generateRandomString() {
-  
+  // return a string of 6 random alphanumeric characters
+  const shortURL = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
+  return shortURL;
 }
 
 const urlDatabase = {
@@ -47,6 +49,10 @@ app.post("/urls", (req, res) => {
   console.log(req.body);
   res.send("Ok");
 });
+app.get("/u/:shortURL", (req, res) => {
+  //const longURL =
+  res.redirect(longURL);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
