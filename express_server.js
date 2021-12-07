@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
@@ -17,7 +17,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.get("/",(req, res) => {
+app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
@@ -39,20 +39,23 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new")
 })
 
+//POST redirects to the HTML page having the newly reated shortURL of the provided longURL.
+app.post("/urls", (req, res) => {
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL
+  console.log(req.body.longURL);
+  //res.send("Ok");
+  res.redirect(`/urls/${shortURL}`)
+
+});
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: 'What goes here?' };
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
-//POST return a string 'OK' to browser and longURL to the server.
-app.post("/urls", (req, res) => {
-  console.log(req.body);
-  res.send("Ok");
-});
-app.get("/u/:shortURL", (req, res) => {
-  //const longURL =
-  res.redirect(longURL);
-})
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
