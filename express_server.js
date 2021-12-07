@@ -3,6 +3,9 @@ const app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");  // middleware added to accomodate POST request.
 const { urlencoded } = require("body-parser");
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true })); // directs the obtained LongURL to urls as a JSON(parsed).
 
 app.set("view engine", "ejs");  //connect with the files in view folder with .ejs
@@ -72,6 +75,15 @@ app.post("/urls/:id", (req, res) => {
   const longURL = req.body.longUR;
   urlDatabase[shortURL] = longURL;
   res.redirect("/urls");
+});
+
+//route to connect with the login and collect the username cookie
+app.post("/login", (req, res) => {
+  //console.log(req.body.username)
+  const username = req.body.username;
+  console.log(username)
+  res.cookie('username', username )
+  res.redirect("/urls")
 });
 
 
