@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.set("view engine", "ejs");
 
@@ -26,9 +28,20 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//this route will direct to the forms
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new")
+})
+
+
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {shortURL: req.params.shortURL, longURL: 'What goes here?' };
   res.render("urls_show", templateVars);
+});
+//POST return a string 'OK' to browser and longURL to the server.
+app.post("/urls", (req, res) => {
+  console.log(req.body);
+  res.send("Ok");
 });
 
 app.listen(PORT, () => {
