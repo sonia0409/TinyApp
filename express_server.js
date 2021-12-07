@@ -9,7 +9,7 @@ app.set("view engine", "ejs");  //connect with the files in view folder with .ej
 //shortURL generated
 const generateRandomString = function() {
   // return a string of 6 random alphanumeric characters
-  const shortURL = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
+  const shortURL = Math.floor((1 + Math.random()) * 0x100000).toString(36);;
   return shortURL;
 };
 
