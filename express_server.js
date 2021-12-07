@@ -1,17 +1,19 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
+const bodyParser = require("body-parser");  // middleware added to accomodate POST request.
+app.use(bodyParser.urlencoded({ extended: true })); // directs the obtained LongURL to urls as a JSON(parsed).
 
-app.set("view engine", "ejs");
+app.set("view engine", "ejs");  //connect with the files in view folder with .ejs
 
-function generateRandomString() {
+//shortURL generated
+const generateRandomString = function() {
   // return a string of 6 random alphanumeric characters
   const shortURL = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);
   return shortURL;
-}
+};
 
+//shortURL - longURL; key-value pair
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -26,7 +28,7 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n")
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls", (req, res) => {
@@ -36,24 +38,17 @@ app.get("/urls", (req, res) => {
 
 //this route will direct to the forms
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new")
-})
+  res.render("urls_new");
+});
 
-//POST redirects to the HTML page having the newly reated shortURL of the provided longURL.
+//POST redirects to the HTML page.
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL
-  console.log(req.body.longURL);
-  //res.send("Ok");
-  res.redirect(`/urls/${shortURL}`)
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
 
 });
-//redirecting the user to the lonURL website
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
-});
-
+//shows HTML file with the shortURL and longURL
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
@@ -65,8 +60,6 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 
-
-
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
-})
+  console.log(`Example app listening on port ${PORT}`);
+});
