@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");  // middleware added to accomodate POST request.
+const { urlencoded } = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true })); // directs the obtained LongURL to urls as a JSON(parsed).
 
 app.set("view engine", "ejs");  //connect with the files in view folder with .ejs
@@ -9,7 +10,7 @@ app.set("view engine", "ejs");  //connect with the files in view folder with .ej
 //shortURL generated
 const generateRandomString = function() {
   // return a string of 6 random alphanumeric characters
-  const shortURL = Math.floor((1 + Math.random()) * 0x100000).toString(36);;
+  const shortURL = Math.floor((1 + Math.random()) * 0x100000).toString(36);
   return shortURL;
 };
 
@@ -57,6 +58,12 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
+});
+
+//route to delete the urls
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.shortURL];
+  res.redirect("/urls");
 });
 
 
