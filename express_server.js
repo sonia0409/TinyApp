@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");  // middleware added to accomodate PO
 const { urlencoded } = require("body-parser");
 const cookieParser = require("cookie-parser");
 
+//Middleware
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true })); // directs the obtained LongURL to urls as a JSON(parsed).
 
@@ -22,6 +23,7 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -43,7 +45,9 @@ app.get("/urls", (req, res) => {
 
 //this route will direct to the forms
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const username = req.cookies.username;
+  const templateVars = { urls: urlDatabase, username};
+  res.render("urls_new", templateVars);
 });
 
 //POST redirects to the HTML page.
