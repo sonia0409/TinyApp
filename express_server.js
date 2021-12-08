@@ -41,9 +41,20 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//route to direct to the registration form
+app.get("/register", (req, res) => {
+  res.render("register")
+   
+});
+
+
+
+
 //this route will direct to the forms
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const username = req.cookies.username;
+  const templateVars = { urls: urlDatabase, username};
+  res.render("urls_new", templateVars);
 });
 
 //POST redirects to the HTML page.
@@ -53,6 +64,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 
 });
+
 //shows HTML file with the shortURL and longURL
 app.get("/urls/:shortURL", (req, res) => {
   const username = req.cookies.username;
