@@ -13,7 +13,7 @@ app.set("view engine", "ejs");  //connect with the files in view folder with .ej
 //shortURL generated
 const generateRandomString = function() {
   // return a string of 6 random alphanumeric characters
-  const shortURL = Math.floor((1 + Math.random()) * 0x100000).toString(36);
+  const shortURL = Math.floor((1 + Math.random()) * 0x100000).toString(16);
   return shortURL;
 };
 
@@ -36,7 +36,8 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const username = req.cookies.username;
+  const templateVars = { urls: urlDatabase, username};
   res.render("urls_index", templateVars);
 });
 
@@ -54,7 +55,8 @@ app.post("/urls", (req, res) => {
 });
 //shows HTML file with the shortURL and longURL
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  const username = req.cookies.username;
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username };
   res.render("urls_show", templateVars);
 });
 //redirecting the user to the lonURL website
@@ -72,17 +74,23 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //route to update the longURL
 app.post("/urls/:id", (req, res) => {
   const shortURL = req.params.id;
-  const longURL = req.body.longUR;
+  const longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
   res.redirect("/urls");
 });
 
 //route to connect with the login and collect the username cookie
 app.post("/login", (req, res) => {
-  //console.log(req.body.username)
+ 
   const username = req.body.username;
-  console.log(username)
   res.cookie('username', username )
+  res.redirect("/urls")
+
+});
+
+//route the loggout cookie to clear the cookie
+app.post("/logout", (req, res) => {
+  res.clearCookie("username")
   res.redirect("/urls")
 });
 
