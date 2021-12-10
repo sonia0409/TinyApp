@@ -53,7 +53,12 @@ const users = {
 
 
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  const { email } = req.body;
+  const user = getUserByEmail(email, users);
+  if (!user) {
+    return res.status(403).send("Please login!!");
+  }
+  
 });
 
 app.get("/urls.json", (req, res) => {
@@ -72,7 +77,7 @@ app.get("/urls", (req, res) => {
     res.render("urls_index", templateVars);
   }
   if (!user) {
-    return res.redirect("/login");
+    return res.status(403).send("Please login!!");
   }
 });
 
